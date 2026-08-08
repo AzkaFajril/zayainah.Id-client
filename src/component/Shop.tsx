@@ -25,7 +25,7 @@ export type ProductDetail = {
   links: ProductLink;
 };
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL ?? 'https://adra-backend.vercel.app';
 
 // --- Modal Component ---
 const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onClose: () => void }) => {
@@ -197,7 +197,7 @@ const ProductGrid = () => {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white">
+    <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white" id="gamis">
       {/* Header Tengah */}
       <div className="mb-10 text-center">
         <h2 id="gamis" className="text-2xl font-black text-gray-900 tracking-tight uppercase">New Gamis</h2>

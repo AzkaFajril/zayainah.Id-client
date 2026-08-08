@@ -45,7 +45,7 @@ type ProductDraft = {
   }
 }
 
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_API_URL ?? 'https://adra-backend.vercel.app'
 
 const defaultSlideDraft: SlideDraft = {
   title: '',

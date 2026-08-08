@@ -59,8 +59,11 @@ const Navbar = () => {
             </div>
 
             {/* Ikon Aksi (Pengguna & Keranjang) */}
+            
             <div className="hidden sm:flex items-center space-x-4">
+              <a href='/Login'>
               <User className="h-6 w-6 text-gray-700 cursor-pointer hover:text-gray-900" />
+              </a>
               <ShoppingCart className="h-6 w-6 text-gray-700 cursor-pointer hover:text-gray-900" />
             </div>
 

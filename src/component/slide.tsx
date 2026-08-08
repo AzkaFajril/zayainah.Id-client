@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 
 // Pastikan API_URL didefinisikan atau gunakan fallback
-const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5000';
+const API_URL = import.meta.env.VITE_API_URL ?? 'https://adra-backend.vercel.app';
 // Durasi perpindahan slide
 const SLIDE_INTERVAL = 6000;
 // Durasi animasi teks (harus lebih pendek dari setTimeout di bawah)
