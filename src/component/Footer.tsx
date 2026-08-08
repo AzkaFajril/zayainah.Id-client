@@ -1,5 +1,4 @@
-import React from 'react';
-import { Mail, Facebook, Twitter, Instagram } from 'lucide-react';
+import { Mail, Instagram } from 'lucide-react';
 
 // Data untuk Kolom Link
 const footerLinks = {

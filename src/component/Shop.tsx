@@ -111,6 +111,11 @@ const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onC
                     WhatsApp <ExternalLink className="h-4 w-4" />
                   </a>
                 )}
+                {product.links?.tiktok && (
+      <a href={product.links.tiktok} target="_blank" rel="noreferrer" className="flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-bold text-white bg-black hover:opacity-90 transition-all shadow-md">
+        TikTok <ExternalLink className="h-4 w-4" />
+      </a>
+    )}
               </div>
             </div>
           </div>

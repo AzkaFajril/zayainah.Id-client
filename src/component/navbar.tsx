@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Menu, Search, User, ShoppingCart, X } from 'lucide-react'; // Menggunakan ikon dari 'lucide-react'
 import LogoIcon from "./assets/zayainah.id.jpg";
 
@@ -7,9 +7,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State untuk mengontrol tampilan menu mobile
 
   // Data link navigasi
-  const navLinks = [
-  
-  ];
+  const navLinks: { name: string; href: string }[] = [];
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">

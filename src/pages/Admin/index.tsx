@@ -610,28 +610,6 @@ const AdminDashboard = () => {
     }
   }
 
-  const handleDeleteGalleryItem = async (productId: string, galleryIndex: number) => {
-    try {
-      const formData = new FormData()
-      formData.append('deletedGalleryIndices', JSON.stringify([galleryIndex]))
-
-      const response = await authorizedFetch(`${API_URL}/api/products/${productId}`, {
-        method: 'PUT',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data?.message ?? 'Gagal menghapus gallery item')
-      }
-
-      showFeedback('message', 'Gallery item dihapus')
-      fetchProducts()
-    } catch (err) {
-      showFeedback('error', err instanceof Error ? err.message : 'Gagal menghapus gallery item')
-    }
-  }
-
   const renderProductCard = (product: Product) => {
     const draft = productDrafts[product._id] ?? defaultProductDraft
 
