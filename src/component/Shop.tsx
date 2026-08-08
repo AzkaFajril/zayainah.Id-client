@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Eye, ExternalLink, X } from 'lucide-react';
+import { Eye, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // --- Types ---
 type ProductLink = {
@@ -29,18 +29,35 @@ const API_URL = import.meta.env.VITE_API_URL ?? 'https://adra-backend.vercel.app
 
 // --- Modal Component ---
 const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onClose: () => void }) => {
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  // Gabungkan foto utama + galeri jadi satu array supaya bisa navigasi next/prev
+  const allImages = useMemo(
+    () => [product.mainImageUrl, ...(product.gallery?.map((g) => g.url) ?? [])],
+    [product]
+  );
+
+  // null = lightbox tertutup, angka = index foto yang sedang di-preview
+  const [previewIndex, setPreviewIndex] = useState<number | null>(null);
+
+  const openPreview = (index: number) => setPreviewIndex(index);
+  const closePreview = () => setPreviewIndex(null); // hanya menutup lightbox, tetap di modal produk ini
+
+  const showPrev = () => {
+    if (previewIndex === null) return;
+    setPreviewIndex((previewIndex - 1 + allImages.length) % allImages.length);
+  };
+
+  const showNext = () => {
+    if (previewIndex === null) return;
+    setPreviewIndex((previewIndex + 1) % allImages.length);
+  };
 
   return (
-    /* Overlay: Klik di sini untuk menutup modal */
+    /* Overlay: modal hanya bisa ditutup lewat tombol X, klik di luar tidak menutup */
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-3 backdrop-blur-sm transition-all animate-in fade-in duration-200"
-      onClick={onClose}
     >
-      {/* Konten Putih: stopPropagation agar klik di dalam tidak menutup modal */}
       <div 
         className="w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center border-b px-4 sm:px-6 py-4 sticky top-0 bg-white z-10">
           <div className="pr-8">
@@ -63,7 +80,7 @@ const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onC
                 src={product.mainImageUrl}
                 alt={product.name}
                 className="w-full h-full object-cover cursor-zoom-in transition-transform hover:scale-105"
-                onClick={() => setPreviewImage(product.mainImageUrl)}
+                onClick={() => openPreview(0)}
               />
             </div>
 
@@ -74,7 +91,7 @@ const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onC
                     src={image.url}
                     alt={`${product.name} ${index + 1}`}
                     className="w-full h-full object-cover cursor-zoom-in hover:opacity-80 transition-opacity"
-                    onClick={() => setPreviewImage(image.url)}
+                    onClick={() => openPreview(index + 1)}
                   />
                 </div>
               ))}
@@ -83,8 +100,11 @@ const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onC
 
           {/* Bagian Info (Dibuat Tengah untuk Mobile) */}
           <div className="space-y-6 flex flex-col justify-center">
-            <div className="prose prose-sm text-gray-600 text-center md:text-left">
-              <p className="leading-relaxed">{product.longDescription || product.description}</p>
+            <div className="text-center md:text-left">
+              <p className="text-xs uppercase tracking-widest text-gray-400 font-bold mb-2">Deskripsi</p>
+              <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
+                {product.longDescription || product.description}
+              </p>
             </div>
 
             <div className="rounded-xl bg-gray-50 p-5 border border-gray-100 text-center">
@@ -123,17 +143,64 @@ const ProductDetailsModal = ({ product, onClose }: { product: ProductDetail; onC
       </div>
 
       {/* Lightbox Preview */}
-      {previewImage && (
+      {previewIndex !== null && (
         <div 
           className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-4" 
-          onClick={() => setPreviewImage(null)}
+          onClick={closePreview}
         >
+          {/* Tombol close (X) - hanya menutup lightbox, tetap di modal produk */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              closePreview();
+            }}
+            aria-label="Tutup"
+            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
+          >
+            <X className="h-8 w-8" />
+          </button>
+
+          {/* Tombol previous, hanya tampil kalau foto lebih dari 1 */}
+          {allImages.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                showPrev();
+              }}
+              aria-label="Foto sebelumnya"
+              className="absolute left-4 text-white/80 hover:text-white transition-colors"
+            >
+              <ChevronLeft className="h-9 w-9" />
+            </button>
+          )}
+
           <img 
-            src={previewImage} 
-            alt="Preview" 
+            src={allImages[previewIndex]} 
+            alt={`${product.name} - foto ${previewIndex + 1}`}
             className="max-h-[90vh] max-w-full rounded-lg object-contain shadow-2xl" 
             onClick={(e) => e.stopPropagation()}
           />
+
+          {/* Tombol next, hanya tampil kalau foto lebih dari 1 */}
+          {allImages.length > 1 && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                showNext();
+              }}
+              aria-label="Foto berikutnya"
+              className="absolute right-4 text-white/80 hover:text-white transition-colors"
+            >
+              <ChevronRight className="h-9 w-9" />
+            </button>
+          )}
+
+          {/* Indikator posisi foto */}
+          {allImages.length > 1 && (
+            <div className="absolute bottom-4 text-sm text-white/70">
+              {previewIndex + 1} / {allImages.length}
+            </div>
+          )}
         </div>
       )}
     </div>
