@@ -7,8 +7,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State untuk mengontrol tampilan menu mobile
 
   // Data link navigasi
-  const navLinks = [
-  
+  const navLinks: { name: string; href: string }[] = [
+
   ];
 
   return (
